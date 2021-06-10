@@ -89,6 +89,16 @@ public final class AuthenticationsImpl {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<AcrRefreshToken>> exchangeAadAccessTokenForAcrRefreshTokenWithResponseAsync(
             String serviceParam, String accessToken) {
+        if (this.client.getUrl() == null) {
+            return Mono.error(
+                    new IllegalArgumentException("Parameter this.client.getUrl() is required and cannot be null."));
+        }
+        if (serviceParam == null) {
+            return Mono.error(new IllegalArgumentException("Parameter serviceParam is required and cannot be null."));
+        }
+        if (accessToken == null) {
+            return Mono.error(new IllegalArgumentException("Parameter accessToken is required and cannot be null."));
+        }
         final String grantType = "access_token";
         final String accept = "application/json";
         return FluxUtil.withContext(
@@ -111,6 +121,16 @@ public final class AuthenticationsImpl {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<AcrRefreshToken>> exchangeAadAccessTokenForAcrRefreshTokenWithResponseAsync(
             String serviceParam, String accessToken, Context context) {
+        if (this.client.getUrl() == null) {
+            return Mono.error(
+                    new IllegalArgumentException("Parameter this.client.getUrl() is required and cannot be null."));
+        }
+        if (serviceParam == null) {
+            return Mono.error(new IllegalArgumentException("Parameter serviceParam is required and cannot be null."));
+        }
+        if (accessToken == null) {
+            return Mono.error(new IllegalArgumentException("Parameter accessToken is required and cannot be null."));
+        }
         final String grantType = "access_token";
         final String accept = "application/json";
         return service.exchangeAadAccessTokenForAcrRefreshToken(
@@ -167,6 +187,38 @@ public final class AuthenticationsImpl {
     }
 
     /**
+     * Exchange AAD tokens for an ACR refresh Token.
+     *
+     * @param serviceParam Indicates the name of your Azure container registry.
+     * @param accessToken AAD access token, mandatory when grant_type is access_token_refresh_token or access_token.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws AcrErrorsException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public AcrRefreshToken exchangeAadAccessTokenForAcrRefreshToken(String serviceParam, String accessToken) {
+        return exchangeAadAccessTokenForAcrRefreshTokenAsync(serviceParam, accessToken).block();
+    }
+
+    /**
+     * Exchange AAD tokens for an ACR refresh Token.
+     *
+     * @param serviceParam Indicates the name of your Azure container registry.
+     * @param accessToken AAD access token, mandatory when grant_type is access_token_refresh_token or access_token.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws AcrErrorsException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<AcrRefreshToken> exchangeAadAccessTokenForAcrRefreshTokenWithResponse(
+            String serviceParam, String accessToken, Context context) {
+        return exchangeAadAccessTokenForAcrRefreshTokenWithResponseAsync(serviceParam, accessToken, context).block();
+    }
+
+    /**
      * Exchange ACR Refresh token for an ACR Access Token.
      *
      * @param serviceParam Indicates the name of your Azure container registry.
@@ -182,6 +234,22 @@ public final class AuthenticationsImpl {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<AcrAccessToken>> exchangeAcrRefreshTokenForAcrAccessTokenWithResponseAsync(
             String serviceParam, String scope, String refreshToken, TokenGrantType grantType) {
+        if (this.client.getUrl() == null) {
+            return Mono.error(
+                    new IllegalArgumentException("Parameter this.client.getUrl() is required and cannot be null."));
+        }
+        if (serviceParam == null) {
+            return Mono.error(new IllegalArgumentException("Parameter serviceParam is required and cannot be null."));
+        }
+        if (scope == null) {
+            return Mono.error(new IllegalArgumentException("Parameter scope is required and cannot be null."));
+        }
+        if (refreshToken == null) {
+            return Mono.error(new IllegalArgumentException("Parameter refreshToken is required and cannot be null."));
+        }
+        if (grantType == null) {
+            return Mono.error(new IllegalArgumentException("Parameter grantType is required and cannot be null."));
+        }
         final String accept = "application/json";
         return FluxUtil.withContext(
                 context ->
@@ -206,6 +274,22 @@ public final class AuthenticationsImpl {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<AcrAccessToken>> exchangeAcrRefreshTokenForAcrAccessTokenWithResponseAsync(
             String serviceParam, String scope, String refreshToken, TokenGrantType grantType, Context context) {
+        if (this.client.getUrl() == null) {
+            return Mono.error(
+                    new IllegalArgumentException("Parameter this.client.getUrl() is required and cannot be null."));
+        }
+        if (serviceParam == null) {
+            return Mono.error(new IllegalArgumentException("Parameter serviceParam is required and cannot be null."));
+        }
+        if (scope == null) {
+            return Mono.error(new IllegalArgumentException("Parameter scope is required and cannot be null."));
+        }
+        if (refreshToken == null) {
+            return Mono.error(new IllegalArgumentException("Parameter refreshToken is required and cannot be null."));
+        }
+        if (grantType == null) {
+            return Mono.error(new IllegalArgumentException("Parameter grantType is required and cannot be null."));
+        }
         final String accept = "application/json";
         return service.exchangeAcrRefreshTokenForAcrAccessToken(
                 this.client.getUrl(), serviceParam, scope, refreshToken, grantType, accept, context);
@@ -265,5 +349,46 @@ public final class AuthenticationsImpl {
                                 return Mono.empty();
                             }
                         });
+    }
+
+    /**
+     * Exchange ACR Refresh token for an ACR Access Token.
+     *
+     * @param serviceParam Indicates the name of your Azure container registry.
+     * @param scope Which is expected to be a valid scope, and can be specified more than once for multiple scope
+     *     requests. You obtained this from the Www-Authenticate response header from the challenge.
+     * @param refreshToken Must be a valid ACR refresh token.
+     * @param grantType Grant type is expected to be refresh_token.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws AcrErrorsException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public AcrAccessToken exchangeAcrRefreshTokenForAcrAccessToken(
+            String serviceParam, String scope, String refreshToken, TokenGrantType grantType) {
+        return exchangeAcrRefreshTokenForAcrAccessTokenAsync(serviceParam, scope, refreshToken, grantType).block();
+    }
+
+    /**
+     * Exchange ACR Refresh token for an ACR Access Token.
+     *
+     * @param serviceParam Indicates the name of your Azure container registry.
+     * @param scope Which is expected to be a valid scope, and can be specified more than once for multiple scope
+     *     requests. You obtained this from the Www-Authenticate response header from the challenge.
+     * @param refreshToken Must be a valid ACR refresh token.
+     * @param grantType Grant type is expected to be refresh_token.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws AcrErrorsException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<AcrAccessToken> exchangeAcrRefreshTokenForAcrAccessTokenWithResponse(
+            String serviceParam, String scope, String refreshToken, TokenGrantType grantType, Context context) {
+        return exchangeAcrRefreshTokenForAcrAccessTokenWithResponseAsync(
+                        serviceParam, scope, refreshToken, grantType, context)
+                .block();
     }
 }
